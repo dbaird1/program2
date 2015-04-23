@@ -29,7 +29,7 @@ struct Process{
 	int progress=0;  //0: unstarted, 1: started, 2: terminated
 };
 vector<Process> p;
-int processes; int referenced; int pagesTotal; 
+int processes = 10; int referenced = 10; int pagesTotal = 50; 
 int locality = 33; // a # from 0-100
 
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 	{
 		if(strcmp(argv[i], "-u") == 0)
 		{
-			fputs("usage\n", stderr);
+			fputs("usage: ./memgen -p [# PROCESSES] -r [# PROCESSES REFERENCED] -l [LOCALITY 0-100] -t [# PAGES TO BE DISTRIBUTED UPON START]\n", stderr);
 			return 0;
 		}
 		else if(strcmp(argv[i], "-p") == 0)
@@ -101,10 +101,15 @@ int main(int argc, char* argv[])
 				fputs("Got letter whenre numeric input expected\n", stderr);
 				return 0;
 			}
+
+			if(pagesTotal < referenced)
+			{
+				fputs("Can not have fewer pages available than processes which reference\n", stderr);
+			}
 		}
 		else
 		{
-			fputs("usage string\n", stderr);
+			fputs("usage: ./memgen -p [# PROCESSES] -r [# PROCESSES REFERENCED] -l [LOCALITY 0-100] -t [# PAGES TO BE DISTRIBUTED UPON START]\n", stderr);
 			return 0;
 		}
 
