@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
 	int terminated = 0;
 	int prevRef = 0;
 	srand(time(NULL));
-	while(!allFin())
+	while(!allFin()) 
 	{
 
 		//start
@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
 		}
 		else if(terminated < processes && (rand()%(((processes-terminated+1)-0))+0) == 1)
 		{
-			while(true)
+			while(true && started != terminated)
 			{
 				int toKill = rand()%(((processes)-0))+0;
 				if(p[toKill].progress == 1)
@@ -198,16 +198,19 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				bool stillRefable = false;
-				for(int i = 0; i < processes; i++)
-					if(p[i].doesRef == 1 && p[i].progress == 1)
-						stillRefable = true;
-
+				bool stillRefable;
 				while(stillRefable)
 				{
+					stillRefable = false;
+					for(int i = 0; i < processes; i++)
+						if(p[i].doesRef == 1 && p[i].progress == 1)
+						{
+							stillRefable = true;
+							break;
+						}
 					//cout << "flag" << endl;
 					int toRef = rand()%(((processes)-0))+0;
-					if(!(toRef == prevRef && terminated != processes-1) && p[toRef].progress == 1 && p[toRef].doesRef == 1)
+					if(p[toRef].progress == 1 && p[toRef].doesRef == 1)
 					{
 						int pageToRef = rand()%((p[toRef].pages+1-1))+1;
 						file << "REFERENCE " << p[toRef].pid << " " << pageToRef << "\n";
@@ -218,8 +221,6 @@ int main(int argc, char* argv[])
 			}
 
 		}
-
-		cout << started << " : " << terminated << endl;
 	}
 	return 0;
 }
